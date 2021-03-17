@@ -63,7 +63,7 @@ def main():
     testset_name = 'polar1'          # test set, 'bsd68' | 'set12'
     need_degradation = False          # default: True
     x8 = False                       # default: False, x8 to boost performance
-    show_img = True                 # default: False
+    show_img = False                 # default: False
     current_idx = min(24, np.int(np.ceil(noise_level_img/2)-1)) # current_idx+1 th denoiser
 
 
