@@ -61,11 +61,12 @@ def main():
     # Preparation
     # ----------------------------------------
 
-    noise_level_img = 15                 # noise level for noisy image
+    noise_level_img = 1                 # noise level for noisy image
     noise_level_model = noise_level_img  # noise level for model
     model_name = 'ffdnet_gray'           # 'ffdnet_gray' | 'ffdnet_color' | 'ffdnet_color_clip' | 'ffdnet_gray_clip'
-    testset_name = 'bsd68'               # test set,  'bsd68' | 'cbsd68' | 'set12'
-    need_degradation = True              # default: True
+    # testset_name = 'set12'               # test set,  'bsd68' | 'cbsd68' | 'set12'
+    testset_name = 'polar1'               # test set,  'bsd68' | 'cbsd68' | 'set12'
+    need_degradation = False              # default: True
     show_img = False                     # default: False
 
 
@@ -102,7 +103,7 @@ def main():
     util.mkdir(E_path)
 
     if H_path == L_path:
-        need_degradation = True
+        need_degradation = False
     logger_name = result_name
     utils_logger.logger_info(logger_name, log_path=os.path.join(E_path, logger_name+'.log'))
     logger = logging.getLogger(logger_name)
@@ -140,8 +141,10 @@ def main():
 
         img_name, ext = os.path.splitext(os.path.basename(img))
         # logger.info('{:->4d}--> {:>10s}'.format(idx+1, img_name+ext))
-        img_L = util.imread_uint(img, n_channels=n_channels)
-        img_L = util.uint2single(img_L)
+        # img_L = util.imread_uint(img, n_channels=n_channels)
+        # img_L = util.uint2single(img_L)
+        img_L = util.imread_uint16(img, n_channels=n_channels)
+        img_L = util.uint16_to_single(img_L)
 
         if need_degradation:  # degradation process
             np.random.seed(seed=0)  # for reproducibility
@@ -161,7 +164,8 @@ def main():
         # ------------------------------------
 
         img_E = model(img_L, sigma)
-        img_E = util.tensor2uint(img_E)
+        # img_E = util.tensor2uint(img_E)
+        img_E = util.tensor2uint16(img_E)
 
         if need_H:
 

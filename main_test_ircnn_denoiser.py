@@ -57,12 +57,13 @@ def main():
     # ----------------------------------------
     # Preparation
     # ----------------------------------------
-    noise_level_img = 50             # noise level for noisy image
+    noise_level_img = 1             # noise level for noisy image
     model_name = 'ircnn_gray'        # 'ircnn_gray' | 'ircnn_color'
-    testset_name = 'set12'          # test set, 'bsd68' | 'set12'
-    need_degradation = True          # default: True
+    # testset_name = 'set12'          # test set, 'bsd68' | 'set12'
+    testset_name = 'polar1'          # test set, 'bsd68' | 'set12'
+    need_degradation = False          # default: True
     x8 = False                       # default: False, x8 to boost performance
-    show_img = False                 # default: False
+    show_img = True                 # default: False
     current_idx = min(24, np.int(np.ceil(noise_level_img/2)-1)) # current_idx+1 th denoiser
 
 
@@ -89,7 +90,8 @@ def main():
     util.mkdir(E_path)
 
     if H_path == L_path:
-        need_degradation = True
+        # need_degradation = True
+        need_degradation = False
     logger_name = result_name
     utils_logger.logger_info(logger_name, log_path=os.path.join(E_path, logger_name+'.log'))
     logger = logging.getLogger(logger_name)
@@ -128,8 +130,10 @@ def main():
         # ------------------------------------
         img_name, ext = os.path.splitext(os.path.basename(img))
         # logger.info('{:->4d}--> {:>10s}'.format(idx+1, img_name+ext))
-        img_L = util.imread_uint(img, n_channels=n_channels)
-        img_L = util.uint2single(img_L)
+        # img_L = util.imread_uint(img, n_channels=n_channels)
+        # img_L = util.uint2single(img_L)
+        img_L = util.imread_uint16(img, n_channels=n_channels)
+        img_L = util.uint16_to_single(img_L)
 
         if need_degradation:  # degradation process
             np.random.seed(seed=0)  # for reproducibility
@@ -148,7 +152,8 @@ def main():
         else:
             img_E = utils_model.test_mode(model, img_L, mode=3)
 
-        img_E = util.tensor2uint(img_E)
+        # img_E = util.tensor2uint(img_E)
+        img_E = util.tensor2uint16(img_E)
 
         if need_H:
 

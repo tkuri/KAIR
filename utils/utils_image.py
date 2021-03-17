@@ -196,6 +196,21 @@ def imread_uint(path, n_channels=3):
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
     return img
 
+def imread_uint16(path, n_channels=3):
+    #  input: path
+    # output: HxWx3(RGB or GGG), or HxWx1 (G)
+    if n_channels == 1:
+        img = cv2.imread(path, -1)  # cv2.IMREAD_GRAYSCALE
+        img = np.expand_dims(img, axis=2)  # HxWx1
+    elif n_channels == 3:
+        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)  # BGR or G
+        if img.ndim == 2:
+            img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)  # GGG
+        else:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
+    return img
+
+
 
 # --------------------------------------------
 # matlab's imwrite
@@ -204,6 +219,7 @@ def imsave(img, img_path):
     img = np.squeeze(img)
     if img.ndim == 3:
         img = img[:, :, [2, 1, 0]]
+    print(img.dtype)
     cv2.imwrite(img_path, img)
 
 def imwrite(img, img_path):
@@ -250,6 +266,9 @@ def uint2single(img):
 
     return np.float32(img/255.)
 
+def uint16_to_single(img):
+    return np.float32(img/65535.)
+
 
 def single2uint(img):
 
@@ -291,6 +310,13 @@ def tensor2uint(img):
     if img.ndim == 3:
         img = np.transpose(img, (1, 2, 0))
     return np.uint8((img*255.0).round())
+
+
+def tensor2uint16(img):
+    img = img.data.squeeze().float().clamp_(0, 1).cpu().numpy()
+    if img.ndim == 3:
+        img = np.transpose(img, (1, 2, 0))
+    return np.uint16((img*65535.0).round())
 
 
 # --------------------------------------------
