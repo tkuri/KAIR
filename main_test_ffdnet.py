@@ -61,11 +61,11 @@ def main():
     # Preparation
     # ----------------------------------------
 
-    noise_level_img = 1                 # noise level for noisy image
+    noise_level_img = 30                 # noise level for noisy image
     noise_level_model = noise_level_img  # noise level for model
     model_name = 'ffdnet_gray'           # 'ffdnet_gray' | 'ffdnet_color' | 'ffdnet_color_clip' | 'ffdnet_gray_clip'
     # testset_name = 'set12'               # test set,  'bsd68' | 'cbsd68' | 'set12'
-    testset_name = 'polar1'               # test set,  'bsd68' | 'cbsd68' | 'set12'
+    testset_name = 'polar_elasticity'               # test set,  'bsd68' | 'cbsd68' | 'set12'
     need_degradation = False              # default: True
     show_img = False                     # default: False
 
@@ -190,7 +190,8 @@ def main():
         # save results
         # ------------------------------------
 
-        util.imsave(img_E, os.path.join(E_path, img_name+ext))
+        # util.imsave(img_E, os.path.join(E_path, img_name+ext))
+        util.imsave(img_E, os.path.join(E_path, img_name+'_ffd'+str(noise_level_img)+ext))
 
     if need_H:
         ave_psnr = sum(test_results['psnr']) / len(test_results['psnr'])

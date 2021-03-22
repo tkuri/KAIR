@@ -57,10 +57,10 @@ def main():
     # ----------------------------------------
     # Preparation
     # ----------------------------------------
-    noise_level_img = 1             # noise level for noisy image
+    noise_level_img = 30             # noise level for noisy image
     model_name = 'ircnn_gray'        # 'ircnn_gray' | 'ircnn_color'
     # testset_name = 'set12'          # test set, 'bsd68' | 'set12'
-    testset_name = 'polar1'          # test set, 'bsd68' | 'set12'
+    testset_name = 'polar_elasticity'          # test set, 'bsd68' | 'set12'
     need_degradation = False          # default: True
     x8 = False                       # default: False, x8 to boost performance
     show_img = False                 # default: False
@@ -176,7 +176,8 @@ def main():
         # ------------------------------------
         # save results
         # ------------------------------------
-        util.imsave(img_E, os.path.join(E_path, img_name+ext))
+        # util.imsave(img_E, os.path.join(E_path, img_name+ext))
+        util.imsave(img_E, os.path.join(E_path, img_name+'_ircnn'+str(noise_level_img)+ext))
 
     if need_H:
         ave_psnr = sum(test_results['psnr']) / len(test_results['psnr'])
